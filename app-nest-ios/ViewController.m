@@ -15,6 +15,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.navigationItem.title = @"原生开发";
     // Do any additional setup after loading the view.
 }
 

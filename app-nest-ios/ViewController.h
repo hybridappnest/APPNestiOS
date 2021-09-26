@@ -6,8 +6,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ANFrameworks.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : BaseController
 
 
 @end

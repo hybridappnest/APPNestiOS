@@ -1,0 +1,81 @@
+PODS:
+  - AFNetworking (4.0.1):
+    - AFNetworking/NSURLSession (= 4.0.1)
+    - AFNetworking/Reachability (= 4.0.1)
+    - AFNetworking/Security (= 4.0.1)
+    - AFNetworking/Serialization (= 4.0.1)
+    - AFNetworking/UIKit (= 4.0.1)
+  - AFNetworking/NSURLSession (4.0.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (4.0.1)
+  - AFNetworking/Security (4.0.1)
+  - AFNetworking/Serialization (4.0.1)
+  - AFNetworking/UIKit (4.0.1):
+    - AFNetworking/NSURLSession
+  - AliyunOSSiOS (2.10.10)
+  - JSONModel (1.8.0)
+  - MMLayout (0.2.0)
+  - ReactiveObjC (3.1.1)
+  - SDWebImage (5.9.0):
+    - SDWebImage/Core (= 5.9.0)
+  - SDWebImage/Core (5.9.0)
+  - Toast (4.0.0)
+  - TXIMSDK_Plus_iOS (5.6.1200)
+  - TXIMSDK_TUIKit_iOS (5.6.1200):
+    - MMLayout (= 0.2.0)
+    - ReactiveObjC (= 3.1.1)
+    - SDWebImage (= 5.9.0)
+    - Toast (= 4.0.0)
+    - TXIMSDK_Plus_iOS (= 5.6.1200)
+  - WechatOpenSDK (1.8.7.1)
+  - YBImageBrowser/NOSD (3.0.9):
+    - YYImage
+  - YBImageBrowser/VideoNOSD (3.0.9):
+    - YBImageBrowser/NOSD
+  - YYImage (1.0.4):
+    - YYImage/Core (= 1.0.4)
+  - YYImage/Core (1.0.4)
+
+DEPENDENCIES:
+  - AFNetworking (~> 4.0.1)
+  - AliyunOSSiOS
+  - JSONModel
+  - TXIMSDK_TUIKit_iOS
+  - WechatOpenSDK
+  - YBImageBrowser/NOSD
+  - YBImageBrowser/VideoNOSD
+
+SPEC REPOS:
+  trunk:
+    - AFNetworking
+    - AliyunOSSiOS
+    - JSONModel
+    - MMLayout
+    - ReactiveObjC
+    - SDWebImage
+    - Toast
+    - TXIMSDK_Plus_iOS
+    - TXIMSDK_TUIKit_iOS
+    - WechatOpenSDK
+    - YBImageBrowser
+    - YYImage
+
+SPEC CHECKSUMS:
+  AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
+  AliyunOSSiOS: b8f1dfc229cd9abf68c8ee0cb245c2d66e00dd96
+  JSONModel: 02ab723958366a3fd27da57ea2af2113658762e9
+  MMLayout: 3fb59d58eeb8656c64e61d550fb0088e10666c11
+  ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
+  SDWebImage: 62ae4a18473520c67b79e9724c31a63599cc9423
+  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
+  TXIMSDK_Plus_iOS: 1bfe351c84e3dad80e9c8e182267f87f6295f715
+  TXIMSDK_TUIKit_iOS: 3d5c579d8712f3ad4820b50be1a32c08cb127c30
+  WechatOpenSDK: 6a4d1436c15b3b5fe2a0bd383f3046010186da44
+  YBImageBrowser: 7ecc8bf33ffa5f3b94c397c29b4f3638dd37f527
+  YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
+
+PODFILE CHECKSUM: 5c5823d754c8dc8373315b7e4205caf99eaf5a54
+
+COCOAPODS: 1.10.1

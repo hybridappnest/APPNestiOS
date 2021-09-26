@@ -1,0 +1,15 @@
+CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO
+EXCLUDED_ARCHS[sdk=iphonesimulator*] = arm64
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/TXIMSDK_Plus_iOS"
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/AFNetworking" "${PODS_ROOT}/Headers/Public/AliyunOSSiOS" "${PODS_ROOT}/Headers/Public/JSONModel" "${PODS_ROOT}/Headers/Public/MMLayout" "${PODS_ROOT}/Headers/Public/ReactiveObjC" "${PODS_ROOT}/Headers/Public/SDWebImage" "${PODS_ROOT}/Headers/Public/TXIMSDK_TUIKit_iOS" "${PODS_ROOT}/Headers/Public/Toast" "${PODS_ROOT}/Headers/Public/WechatOpenSDK" "${PODS_ROOT}/Headers/Public/YBImageBrowser" "${PODS_ROOT}/Headers/Public/YYImage" ${PODS_ROOT}/TXIMSDK_Plus_iOS/ImSDK_Plus.framework/Headers/
+LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
+LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/AFNetworking" "${PODS_CONFIGURATION_BUILD_DIR}/AliyunOSSiOS" "${PODS_CONFIGURATION_BUILD_DIR}/JSONModel" "${PODS_CONFIGURATION_BUILD_DIR}/MMLayout" "${PODS_CONFIGURATION_BUILD_DIR}/ReactiveObjC" "${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage" "${PODS_CONFIGURATION_BUILD_DIR}/TXIMSDK_TUIKit_iOS" "${PODS_CONFIGURATION_BUILD_DIR}/Toast" "${PODS_CONFIGURATION_BUILD_DIR}/YBImageBrowser" "${PODS_CONFIGURATION_BUILD_DIR}/YYImage" "${PODS_ROOT}/TXIMSDK_TUIKit_iOS/TUIKit/Classes/Third/voiceConvert/opencore-amrnb" "${PODS_ROOT}/TXIMSDK_TUIKit_iOS/TUIKit/Classes/Third/voiceConvert/opencore-amrwb" "${PODS_ROOT}/WechatOpenSDK/OpenSDK1.8.7.1"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"AFNetworking" -l"AliyunOSSiOS" -l"JSONModel" -l"MMLayout" -l"ReactiveObjC" -l"SDWebImage" -l"TXIMSDK_TUIKit_iOS" -l"Toast" -l"WeChatSDK" -l"YBImageBrowser" -l"YYImage" -l"c++" -l"opencore-amrnb" -l"opencore-amrwb" -l"resolv" -l"sqlite3.0" -l"stdc++" -l"z" -framework "Accelerate" -framework "AssetsLibrary" -framework "CoreFoundation" -framework "CoreGraphics" -framework "CoreTelephony" -framework "Foundation" -framework "ImSDK_Plus" -framework "ImageIO" -framework "MobileCoreServices" -framework "QuartzCore" -framework "Security" -framework "SystemConfiguration" -framework "UIKit" -framework "WebKit"
+PODS_BUILD_DIR = ${BUILD_DIR}
+PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
+PODS_PODFILE_DIR_PATH = ${SRCROOT}/.
+PODS_ROOT = ${SRCROOT}/Pods
+PODS_XCFRAMEWORKS_BUILD_DIR = $(PODS_CONFIGURATION_BUILD_DIR)/XCFrameworkIntermediates
+USE_RECURSIVE_SCRIPT_INPUTS_IN_SCRIPT_PHASES = YES
+VALID_ARCHS = armv7 arm64 x86_64
