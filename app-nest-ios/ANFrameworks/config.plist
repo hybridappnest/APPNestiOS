@@ -5,11 +5,11 @@
 	<key>oss</key>
 	<dict>
 		<key>endpoint</key>
-		<string>https://oss-cn-shanghai.aliyuncs.com</string>
+		<string></string>
 		<key>authUrl</key>
-		<string>https://prodjava.dingbaox.com/api/oss/getAppOssSTSToken</string>
+		<string></string>
 		<key>bucketName</key>
-		<string>dbx-assets</string>
+		<string></string>
 	</dict>
 	<key>base</key>
 	<dict>
@@ -34,9 +34,9 @@
 			<key>name</key>
 			<string>首页</string>
 			<key>imageRes</key>
-			<string></string>
+			<string>study</string>
 			<key>imageResSelected</key>
-			<string></string>
+			<string>study_h</string>
 			<key>textColorRes</key>
 			<string>0x8f8f8f</string>
 			<key>textColorResSelected</key>

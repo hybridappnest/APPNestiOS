@@ -50,11 +50,11 @@
 ///获取APP名称
 #define APPName ([[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"])
 
-#define PNSAuth (@"wcZ/Zgm2qfLPx/DR6rPdHs3PMbwPb4U4sc+ZEpm0zb9IkC/4x0z1bxlVRlRbPVL95YvKL0BhytvToyQ1RGlEUI+SLBEaFMa2svqmcMUXY28bOZXqzJaEi9qfcWHE+r1quH0GId3r4nYmzvOX4PpdNeXjD32iRNq2p47mnU9cthCcMSf/krsln3dhKnc5zhtwocTIebdINOG3fHscs/qMqdYybNLj+qVT6IuyQ/S5S3J06vCfHDxB8Q==")
+#define PNSAuth (@"")
 
-#define wxappId (@"wxef7a0b84f5dec905")
-#define wxscope (@"snsapi_userinfo")
-#define wxstate (@"dingbaox")
+#define wxappId (@"")
+#define wxscope (@"")
+#define wxstate (@"")
 
 
 
