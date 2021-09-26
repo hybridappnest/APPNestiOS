@@ -260,7 +260,7 @@ QRService.m
 ## 加入讨论群
 | 微信 | QQ |
 |-----------------------|:-----------------------|
-| ![微信](./Wechat.png) | ![QQ](./QQ.png) |
+| ![微信](./WechatImg.png) | ![QQ](./QQImg.png) |
 
 ## LICENSE
 Apache License Version 2.0
