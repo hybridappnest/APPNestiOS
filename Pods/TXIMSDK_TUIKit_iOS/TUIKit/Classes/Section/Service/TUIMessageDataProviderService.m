@@ -200,12 +200,7 @@
                                         break;
                                     case V2TIM_GROUP_INFO_CHANGE_TYPE_OWNER:
                                     {
-                                        // %@修改群主为\"%@\"、
-                                        if (userList.count) {
-                                            str = [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsEditGroupOwnerFormat), str, userList.firstObject];
-                                        } else {
-                                            str = [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsEditGroupOwnerFormat), str, info.value];
-                                        }
+                                        str = [NSString stringWithFormat:TUILocalizableString(TUIKitMessageTipsEditGroupOwnerFormat), str, info.value]; // %@修改群主为\"%@\"、
                                     }
                                         break;
                                     default:
@@ -365,7 +360,6 @@
     soundData.duration = elem.duration;
     soundData.length = elem.dataSize;
     soundData.uuid = elem.uuid;
-    soundData.path = elem.path;
     return soundData;
 }
 

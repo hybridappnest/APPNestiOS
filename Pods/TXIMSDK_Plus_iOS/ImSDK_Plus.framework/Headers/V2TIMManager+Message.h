@@ -130,12 +130,6 @@ typedef NS_ENUM(NSInteger, V2TIMReceiveMessageOpt) {
     V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE          = 2,  ///< 在线正常接收消息，离线不会有推送通知
 };
 
-/// 消息搜索关键字匹配类型
-typedef NS_ENUM(NSInteger, V2TIMKeywordListMatchType) {
-    V2TIM_KEYWORD_LIST_MATCH_TYPE_OR          = 0,
-    V2TIM_KEYWORD_LIST_MATCH_TYPE_AND         = 1
-};
-
 /////////////////////////////////////////////////////////////////////////////////
 //
 //                         监听 - 高级（图片、语音、视频等）消息
@@ -239,7 +233,7 @@ typedef NS_ENUM(NSInteger, V2TIMKeywordListMatchType) {
 - (V2TIMMessage *)createFaceMessage:(int)index data:(NSData *)data;
 
 /**
- *  2.11 创建合并消息（5.2.210 及以上版本支持）
+ *  2.11 创建合并消息
  *
  *  <p> 我们在收到一条合并消息的时候，通常会在聊天界面这样显示：
  *  <p> |vinson 和 lynx 的聊天记录                       |        -- title         （标题）
@@ -271,7 +265,7 @@ typedef NS_ENUM(NSInteger, V2TIMKeywordListMatchType) {
                        compatibleText:(NSString *)compatibleText;
 
 /**
- *  2.12 创建转发消息（5.2.210 及以上版本支持）
+ *  2.12 创建转发消息
  *
  *  如果需要转发一条消息，不能直接调用 sendMessage 接口发送原消息，需要先 createForwardMessage 创建一条转发消息再发送。
  *
@@ -322,7 +316,6 @@ typedef NS_ENUM(NSInteger, V2TIMKeywordListMatchType) {
 
 /**
  *  4.1 设置针对某个用户的 C2C 消息接收选项（支持批量设置）
- *  <p>5.3.425 及以上版本支持
  *
  *  @note
  *  - 该接口支持批量设置，您可以通过参数 userIDList 设置一批用户，但一次最大允许设置 30 个用户。
@@ -334,7 +327,6 @@ typedef NS_ENUM(NSInteger, V2TIMKeywordListMatchType) {
                            fail:(V2TIMFail)fail;
 /**
  *  4.2 查询针对某个用户的 C2C 消息接收选项
- *  <p>5.3.425 及以上版本支持
  */
 - (void)getC2CReceiveMessageOpt:(NSArray<NSString *> *)userIDList
                            succ:(V2TIMReceiveMessageOptListSucc)succ
@@ -430,7 +422,6 @@ typedef NS_ENUM(NSInteger, V2TIMKeywordListMatchType) {
 
 /**
  *  5.9 清空单聊本地及云端的消息（不删除会话）
- * <p>5.4.666 及以上版本支持
  *
  * @note 请注意：
  * - 会话内的消息在本地删除的同时，在服务器也会同步删除。
@@ -439,7 +430,6 @@ typedef NS_ENUM(NSInteger, V2TIMKeywordListMatchType) {
 
 /**
  *  5.10 清空群聊本地及云端的消息（不删除会话）
- * <p>5.4.666 及以上版本支持
  *
  * @note 请注意：
  * - 会话内的消息在本地删除的同时，在服务器也会同步删除。
@@ -477,7 +467,7 @@ typedef NS_ENUM(NSInteger, V2TIMKeywordListMatchType) {
 - (void)findMessages:(NSArray<NSString *>*)messageIDList succ:(V2TIMMessageListSucc)succ fail:(V2TIMFail)fail;
 
 /**
- * 5.14 搜索本地消息（5.4.666 及以上版本支持）
+ * 5.14 搜索本地消息
  * @param param 消息搜索参数，详见 V2TIMMessageSearchParam 的定义
 */
  -(void)searchLocalMessages:(V2TIMMessageSearchParam *)param succ:(V2TIMSearchMessageListSucc)succ fail:(V2TIMFail)fail;
@@ -500,9 +490,6 @@ typedef NS_ENUM(NSInteger, V2TIMKeywordListMatchType) {
 
 /// 收到消息撤回
 - (void)onRecvMessageRevoked:(NSString *)msgID;
-
-/// 消息内容被修改（第三方服务回调修改了消息内容）
-- (void)onRecvMessageModified:(V2TIMMessage *)msg;
 
 @end
 
@@ -541,6 +528,9 @@ typedef NS_ENUM(NSInteger, V2TIMKeywordListMatchType) {
 @property(nonatomic,strong,readonly) NSString *nameCard;
 
 /// 消息发送者头像
+/// 在 C2C 场景下，陌生人的头像不会实时更新，如需更新陌生人的头像（如在 UI 上点击陌生人头像以展示陌生人信息时），
+/// 请调用 V2TIMManager.h -> getUsersInfo 接口触发信息的拉取。待拉取成功后，SDK 会更新本地头像信息，即 faceURL 字段的内容。
+/// @note 请不要在收到每条消息后都去 getUsersInfo，会严重影响程序性能。
 @property(nonatomic,strong,readonly) NSString *faceURL;
 
 /// 如果是群组消息，groupID 为会话群组 ID，否则为 nil
@@ -614,14 +604,11 @@ typedef NS_ENUM(NSInteger, V2TIMKeywordListMatchType) {
 /// 消息自定义数据（云端保存，会发送到对端，程序卸载重装后还能拉取到）
 @property(nonatomic,strong) NSData* cloudCustomData;
 
-/// 消息是否不计入会话未读数：默认为 NO，表明需要计入会话未读数，设置为 YES，表明不需要计入会话未读数（5.3.425 及以上版本支持）
-@property(nonatomic,assign) BOOL isExcludedFromUnreadCount;
+/// 消息是否不计入会话未读数：默认为 NO，表明需要计入会话未读数，设置为 YES，表明不需要计入会话未读数
+@property(nonatomic, assign) BOOL isExcludedFromUnreadCount;
 
-/// 消息是否不计入会话 lastMsg：默认为 NO，表明需要计入会话 lastMsg，设置为 YES，表明不需要计入会话 lastMsg（5.4.666 及以上版本支持）
-@property(nonatomic,assign) BOOL isExcludedFromLastMessage;
-
-/// 消息的离线推送信息
-@property(nonatomic,strong,readonly) V2TIMOfflinePushInfo *offlinePushInfo;
+/// 消息是否不计入会话 lastMsg：默认为 NO，表明需要计入会话 lastMsg，设置为 YES，表明不需要计入会话 lastMsg
+@property(nonatomic, assign) BOOL isExcludedFromLastMessage;
 
 @end
 
@@ -987,7 +974,6 @@ extern NSString * const kIOSOfflinePushDefaultSound;
 @property(nonatomic,strong) NSString * title;
 
 /// 离线推送展示的内容。
-/// 自定义消息进行离线推送，必须设置此字段内容。
 @property(nonatomic,strong) NSString * desc;
 
 /// 离线推送扩展字段，
@@ -1033,29 +1019,16 @@ extern NSString * const kIOSOfflinePushDefaultSound;
 /////////////////////////////////////////////////////////////////////////////////
 /// 消息搜索参数
 @interface V2TIMMessageSearchParam : NSObject
-/**
- * 关键字列表，最多支持5个。当消息发送者以及消息类型均未指定时，关键字列表必须非空；否则，关键字列表可以为空。
- */
+/// 搜索关键字列表，最多支持5个。
 @property(nonatomic,strong) NSArray<NSString *> * keywordList;
 
-/**
- * 指定关键字列表匹配类型，可设置为“或”关系搜索或者“与”关系搜索.
- * 取值分别为 V2TIM_KEYWORD_LIST_MATCH_TYPE_OR 和 V2TIM_KEYWORD_LIST_MATCH_TYPE_AND，默认为“或”关系搜索。
- */
-@property(nonatomic,assign) V2TIMKeywordListMatchType keywordListMatchType;
-
-/**
- * 指定 userID 发送的消息，最多支持5个。
- */
-@property(nonatomic,strong) NSArray<NSString *> *senderUserIDList;
-
-/// 指定搜索的消息类型集合，传 nil 表示搜索支持的全部类型消息（V2TIMFaceElem 和 V2TIMGroupTipsElem 不支持）取值详见 @V2TIMElemType。
+/// 指定搜索的消息类型集合，传 null 表示搜索支持的全部类型消息（V2TIMFaceElem 和 V2TIMGroupTipsElem 暂不支持）取值详见 @V2TIMElemType。
 @property(nonatomic,strong) NSArray<NSNumber *> * messageTypeList;
 
 /**
  * 搜索“全部会话”还是搜索“指定的会话”：
- * <p> 如果设置 conversationID == nil，代表搜索全部会话。
- * <p> 如果设置 conversationID != nil，代表搜索指定会话。
+ * <p> 如果设置 conversationID == null，代表搜索全部会话。
+ * <p> 如果设置 conversationID != null，代表搜索指定会话。
  */
 @property(nonatomic,strong) NSString *conversationID;
 
@@ -1121,18 +1094,7 @@ extern NSString * const kIOSOfflinePushDefaultSound;
 
 @interface V2TIMMessageListGetOption : NSObject
 
-/**
- * 拉取消息类型，可以设置拉取本地、云端更老或者更新的消息
- *
- * @note 请注意
- * <p>当设置从云端拉取时，会将本地存储消息列表与云端存储消息列表合并后返回。如果无网络，则直接返回本地消息列表。
- * <p>关于 getType、拉取消息的起始消息、拉取消息的时间范围 的使用说明：
- * - getType 可以用来表示拉取的方向：往消息时间更老的方向 或者 往消息时间更新的方向；
- * - lastMsg/lastMsgSeq 用来表示拉取时的起点，第一次拉取时可以不填或者填 0；
- * - getTimeBegin/getTimePeriod 用来表示拉取消息的时间范围，时间范围的起止时间点与拉取方向(getType)有关；
- * - 当起始消息和时间范围都存在时，结果集可理解成：「单独按起始消息拉取的结果」与「单独按时间范围拉取的结果」 取交集；
- * - 当起始消息和时间范围都不存在时，结果集可理解成：从当前会话最新的一条消息开始，按照 getType 所指定的方向和拉取方式拉取。
- */
+/// 拉取消息类型，可以设置拉取本地、云端更老或则更新的消息。
 @property(nonatomic,assign) V2TIMMessageGetType getType;
 
 /// 拉取单聊历史消息
@@ -1144,41 +1106,8 @@ extern NSString * const kIOSOfflinePushDefaultSound;
 /// 拉取消息数量
 @property(nonatomic,assign) NSUInteger count;
 
-/**
- * 拉取消息的起始消息
- *
- * @note 请注意，
- * <p>拉取 C2C 消息，只能使用 lastMsg 作为消息的拉取起点；如果没有指定 lastMsg，默认使用会话的最新消息作为拉取起点。
- * <p>拉取 Group 消息时，除了可以使用 lastMsg 作为消息的拉取起点外，也可以使用 lastMsgSeq 来指定消息的拉取起点，二者的区别在于：
- * - 使用 lastMsg 作为消息的拉取起点时，返回的消息列表里不包含当前设置的 lastMsg；
- * - 使用 lastMsgSeq 作为消息拉取起点时，返回的消息列表里包含当前设置的 lastMsgSeq 所表示的消息。
- *
- * @note 在拉取 Group 消息时，
- * <p>如果同时指定了 lastMsg 和 lastMsgSeq，SDK 优先使用 lastMsg 作为消息的拉取起点。
- * <p>如果 lastMsg 和 lastMsgSeq 都未指定，消息的拉取起点分为如下两种情况：
- * -  如果设置了拉取的时间范围，SDK 会根据 @getTimeBegin 所描述的时间点作为拉取起点；
- * -  如果未设置拉取的时间范围，SDK 默认使用会话的最新消息作为拉取起点。
- */
+/// 拉取消息的起始消息，如果传 nil，起始消息为会话的最新消息
 @property(nonatomic,strong) V2TIMMessage *lastMsg;
-@property (nonatomic, assign) NSUInteger lastMsgSeq;
-
-/**
- * 拉取消息的时间范围
- * @getTimeBegin  表示时间范围的起点；默认为 0，表示从现在开始拉取；UTC 时间戳，单位：秒
- * @getTimePeriod 表示时间范围的长度；默认为 0，表示不限制时间范围；单位：秒
- *
- * @note
- * <p> 时间范围的方向由参数 getType 决定
- * <p> 如果 getType 取 V2TIM_GET_CLOUD_OLDER_MSG/V2TIM_GET_LOCAL_OLDER_MSG，表示从 getTimeBegin 开始，过去的一段时间，时间长度由 getTimePeriod 决定
- * <p> 如果 getType 取 V2TIM_GET_CLOUD_NEWER_MSG/V2TIM_GET_LOCAL_NEWER_MSG，表示从 getTimeBegin 开始，未来的一段时间，时间长度由 getTimePeriod 决定
- * <p> 取值范围区间为闭区间，包含起止时间，二者关系如下：
- * - 如果 getType 指定了朝消息时间更老的方向拉取，则时间范围表示为 [getTimeBegin-getTimePeriod, getTimeBegin]
- * - 如果 getType 指定了朝消息时间更新的方向拉取，则时间范围表示为 [getTimeBegin, getTimeBegin+getTimePeriod]
- */
-@property (nonatomic, assign) NSUInteger getTimeBegin;
-@property (nonatomic, assign) NSUInteger getTimePeriod;
-
-
 
 @end
 

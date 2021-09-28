@@ -135,14 +135,9 @@ typedef void(^TUISearchResultCallback)(BOOL succ, NSString * __nullable errMsg, 
     param.isSearchUserID = YES;
     param.isSearchNickName = YES;
     param.isSearchRemark = YES;
-    [V2TIMManager.sharedInstance searchFriends:param succ:^(NSArray<V2TIMFriendInfoResult *> *resultList) {
+    [V2TIMManager.sharedInstance searchFriends:param succ:^(NSArray<V2TIMFriendInfo *> *infoList) {
         NSMutableArray *arrayM = [NSMutableArray array];
-        for (V2TIMFriendInfoResult *friendResult in resultList) {
-            if (friendResult.relation == V2TIM_FRIEND_RELATION_TYPE_NONE) {
-                // 非好友，不显示
-                break;
-            }
-            V2TIMFriendInfo *friend = friendResult.friendInfo;
+        for (V2TIMFriendInfo *friend in infoList) {
             TUISearchResultCellModel *cellModel = [[TUISearchResultCellModel alloc] init];
             NSString *title = friend.userFullInfo.nickName;
             if (title.length == 0) {

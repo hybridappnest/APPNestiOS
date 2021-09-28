@@ -9,8 +9,6 @@
 #import "THeader.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <AVFoundation/AVFoundation.h>
-#import <AssetsLibrary/AssetsLibrary.h>
-#import <Photos/Photos.h>
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "TUIGroupPendencyViewModel.h"
@@ -33,9 +31,8 @@
 #import "TIMMessage+DataProvider.h"
 #import "V2TUIMessageController.h"
 #import "TUIKitListenerManager.h"
-#import "TUICameraViewController.h"
 
-@interface TUIChatController () <TMessageControllerDelegate, TInputControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate, TUIMessageMultiChooseViewDelegate, TUICameraViewControllerDelegate>
+@interface TUIChatController () <TMessageControllerDelegate, TInputControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate, TUIMessageMultiChooseViewDelegate>
 @property (nonatomic, strong) UIView *tipsView;
 @property (nonatomic, strong) UILabel *pendencyLabel;
 @property (nonatomic, strong) UIButton *pendencyBtn;
@@ -320,7 +317,6 @@
     [_messageController sendMessage:message];
 }
 
-#pragma mark - TMessageControllerDelegate
 - (void)saveDraft
 {
     NSString *draft = self.inputController.inputBar.inputTextView.text;
@@ -463,7 +459,7 @@
     _inputController.inputBar.inputTextView.overrideNextResponder = nil;
 }
 
-#pragma mark - Event Response
+// ----------------------------------
 - (void)selectPhotoForSend
 {
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
@@ -477,19 +473,27 @@
 
 - (void)takePictureForSend
 {
-    TUICameraViewController *vc = [[TUICameraViewController alloc] init];
-    vc.type = TUICameraMediaTypePhoto;
-    vc.delegate = self;
-    [self.navigationController pushViewController:vc animated:YES];
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+        picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        picker.cameraCaptureMode = UIImagePickerControllerCameraCaptureModePhoto;
+        picker.delegate = self;
+        [self presentViewController:picker animated:YES completion:nil];
+    }
 }
 
 - (void)takeVideoForSend
 {
-    TUICameraViewController *vc = [[TUICameraViewController alloc] init];
-    vc.type = TUICameraMediaTypeVideo;
-    vc.videoMinimumDuration = 1.5;
-    vc.delegate = self;
-    [self.navigationController pushViewController:vc animated:YES];
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+        picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        picker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
+        picker.cameraCaptureMode =UIImagePickerControllerCameraCaptureModeVideo;
+        picker.videoQuality = UIImagePickerControllerQualityTypeMedium;
+        [picker setVideoMaximumDuration:15];
+        picker.delegate = self;
+        [self presentViewController:picker animated:YES completion:nil];
+    }
 }
 
 - (void)selectFileForSend
@@ -500,32 +504,7 @@
 
 }
 
-#pragma mark - TUICameraViewControllerDelegate
-- (void)cameraViewController:(TUICameraViewController *)controller didFinishPickingMediaWithVideoURL:(NSURL *)url {
-    [self transcodeIfNeed:url];
-}
-
-- (void)cameraViewController:(TUICameraViewController *)controller didFinishPickingMediaWithImage:(UIImage *)image {
-    NSData *data = UIImageJPEGRepresentation(image, 0.75);
-    NSString *path = [TUIKit_Image_Path stringByAppendingString:[THelper genImageName:nil]];
-    [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
-    
-    TUIImageMessageCellData *uiImage = [[TUIImageMessageCellData alloc] initWithDirection:MsgDirectionOutgoing];
-    uiImage.path = path;
-    uiImage.length = data.length;
-    [self sendMessage:uiImage];
-    
-    for (id<TUIChatControllerListener> delegate in [TUIKitListenerManager sharedInstance].chatListeners) {
-        if (delegate && [delegate respondsToSelector:@selector(chatController:didSendMessage:)]) {
-            [delegate chatController:self didSendMessage:uiImage];
-        }
-    }
-}
-
-- (void)cameraViewControllerDidCancel:(TUICameraViewController *)controller {
-}
-
-#pragma mark - UIImagePickerControllerDelegate
+#pragma mark -
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
     // 快速点的时候会回调多次
@@ -566,197 +545,48 @@
         }
         else if([mediaType isEqualToString:(NSString *)kUTTypeMovie]){
             NSURL *url = [info objectForKey:UIImagePickerControllerMediaURL];
-            if (url) {
-                [self transcodeIfNeed:url];
-                return;
-            }
             
-            // 在某些情况下，UIImagePickerControllerMediaURL 可能为空，使用 UIImagePickerControllerPHAsset
-            PHAsset *asset = nil;
-            if (@available(iOS 11.0, *)) {
-                asset = [info objectForKey:UIImagePickerControllerPHAsset];
+            if(![url.pathExtension  isEqual: @"mp4"]) {
+                NSString* tempPath = NSTemporaryDirectory();
+                NSURL *urlName = [url URLByDeletingPathExtension];
+                NSURL *newUrl = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@%@.mp4", tempPath,[urlName.lastPathComponent stringByRemovingPercentEncoding]]];
+                // mov to mp4
+                AVURLAsset *avAsset = [AVURLAsset URLAssetWithURL:url options:nil];
+                AVAssetExportSession *exportSession = [[AVAssetExportSession alloc]initWithAsset:avAsset presetName:AVAssetExportPresetHighestQuality];
+                 exportSession.outputURL = newUrl;
+                 exportSession.outputFileType = AVFileTypeMPEG4;
+                 exportSession.shouldOptimizeForNetworkUse = YES;
+
+                 [exportSession exportAsynchronouslyWithCompletionHandler:^{
+                 switch ([exportSession status])
+                 {
+                      case AVAssetExportSessionStatusFailed:
+                           NSLog(@"Export session failed");
+                           break;
+                      case AVAssetExportSessionStatusCancelled:
+                           NSLog(@"Export canceled");
+                           break;
+                      case AVAssetExportSessionStatusCompleted:
+                      {
+                           //Video conversion finished
+                           NSLog(@"Successful!");
+                          dispatch_async(dispatch_get_main_queue(), ^{
+                              [self sendVideoWithUrl:newUrl];
+                          });
+                      }
+                           break;
+                      default:
+                           break;
+                  }
+                 }];
+            } else {
+                [self sendVideoWithUrl:url];
             }
-            if (asset) {
-                [self originURLWithAsset:asset completion:^(BOOL success, NSURL *URL) {
-                    if (success) {
-                        [self transcodeIfNeed:URL];
-                        return;
-                    }
-                }];
-                return;
-            }
-            
-            // 在 ios 12 的情况下，UIImagePickerControllerMediaURL 及 UIImagePickerControllerPHAsset 可能为空，需要使用其他方式获取视频文件原始路径
-            url = [info objectForKey:UIImagePickerControllerReferenceURL];
-            if (url) {
-                [self originURLWithRefrenceURL:url completion:^(BOOL success, NSURL *URL) {
-                    if (success) {
-                        [self transcodeIfNeed:URL];
-                    }
-                }];
-                return;
-            }
-            
-            // 其他，不支持
-            [self.view makeToast:@"not support this video"];
         }
     }];
 }
 
-// 根据 UIImagePickerControllerReferenceURL 获取原始文件路径
-- (void)originURLWithRefrenceURL:(NSURL *)URL completion:(void(^)(BOOL success, NSURL *URL))completion
-{
-    if (completion == nil) {
-        return;
-    }
-    NSDictionary *queryInfo = [self dictionaryWithURLQuery:URL.query];
-    NSString *fileName = @"temp.mp4";
-    if ([queryInfo.allKeys containsObject:@"id"] && [queryInfo.allKeys containsObject:@"ext"]) {
-        fileName = [NSString stringWithFormat:@"%@.%@", queryInfo[@"id"], [queryInfo[@"ext"] lowercaseString]];
-    }
-    NSString* tempPath = NSTemporaryDirectory();
-    NSString *filePath = [tempPath stringByAppendingPathComponent:fileName];
-    if ([NSFileManager.defaultManager isDeletableFileAtPath:filePath]) {
-        [NSFileManager.defaultManager removeItemAtPath:filePath error:nil];
-    }
-    NSURL *newUrl = [NSURL fileURLWithPath:filePath];
-    ALAssetsLibrary *assetLibrary= [[ALAssetsLibrary alloc] init];
-    [assetLibrary assetForURL:URL resultBlock:^(ALAsset *asset) {
-        if (asset == nil) {
-            completion(NO, nil);
-            return;
-        }
-        ALAssetRepresentation *rep = [asset defaultRepresentation];
-        Byte *buffer = (Byte*)malloc(rep.size);
-        NSUInteger buffered = [rep getBytes:buffer fromOffset:0.0 length:rep.size error:nil];
-        NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];//this is NSData may be what you want
-        BOOL flag = [NSFileManager.defaultManager createFileAtPath:filePath contents:data attributes:nil];
-        completion(flag, newUrl);
-    } failureBlock:^(NSError *err) {
-        completion(NO, nil);
-    }];
-}
-
-- (void)originURLWithAsset:(PHAsset *)asset completion:(void(^)(BOOL success, NSURL *URL))completion
-{
-    if (completion == nil) {
-        return;
-    }
-    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-        if (status != PHAuthorizationStatusAuthorized) {
-            completion(NO, nil);
-            return;
-        }
-        
-        NSArray<PHAssetResource *> *resources = [PHAssetResource assetResourcesForAsset:asset];
-        if (resources.count == 0) {
-            completion(NO, nil);
-            return;
-        }
-        
-        PHAssetResourceRequestOptions *options = [[PHAssetResourceRequestOptions alloc] init];
-        options.networkAccessAllowed = NO;
-        __block BOOL invoked = NO;
-        [PHAssetResourceManager.defaultManager requestDataForAssetResource:resources.firstObject options:options dataReceivedHandler:^(NSData * _Nonnull data) {
-            // 此处会有重复回调的问题
-            if (invoked) {
-                return;
-            }
-            invoked = YES;
-            if (data == nil) {
-                completion(NO, nil);
-                return;
-            }
-            NSString *fileName = @"temp.mp4";
-            NSString* tempPath = NSTemporaryDirectory();
-            NSString *filePath = [tempPath stringByAppendingPathComponent:fileName];
-            if ([NSFileManager.defaultManager isDeletableFileAtPath:filePath]) {
-                [NSFileManager.defaultManager removeItemAtPath:filePath error:nil];
-            }
-            NSURL *newUrl = [NSURL fileURLWithPath:filePath];
-            BOOL flag = [NSFileManager.defaultManager createFileAtPath:filePath contents:data attributes:nil];
-            completion(flag, newUrl);
-        } completionHandler:^(NSError * _Nullable error) {
-            completion(NO, nil);
-        }];
-    }];
-}
-
-// 获取 NSURL 查询字符串信息
-- (NSDictionary *)dictionaryWithURLQuery:(NSString *)query
-{
-    NSArray *components = [query componentsSeparatedByString:@"&"];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    for (NSString *item in components) {
-        NSArray *subs = [item componentsSeparatedByString:@"="];
-        if (subs.count == 2) {
-            [dict setObject:subs.lastObject forKey:subs.firstObject];
-        }
-    }
-    return [NSDictionary dictionaryWithDictionary:dict];;
-}
-
-// 转码
-- (void)transcodeIfNeed:(NSURL *)url
-{
-    if ([url.pathExtension.lowercaseString isEqualToString:@"mp4"]) {
-        // mp4 直接发送
-        [self sendVideoWithUrl:url];
-    } else {
-        // 非 mp4 文件 => mp4 文件
-        NSString* tempPath = NSTemporaryDirectory();
-        NSURL *urlName = [url URLByDeletingPathExtension];
-        NSURL *newUrl = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@%@.mp4", tempPath,[urlName.lastPathComponent stringByRemovingPercentEncoding]]];
-        
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        if ([fileManager fileExistsAtPath:newUrl.path]){
-            NSError *error;
-            BOOL success = [fileManager removeItemAtPath:newUrl.path error:&error];
-            if (!success || error) {
-                NSAssert1(NO, @"removeItemFail: %@", error.localizedDescription);
-                return;
-            }
-        }
-        // mov to mp4
-        AVURLAsset *avAsset = [AVURLAsset URLAssetWithURL:url options:nil];
-        AVAssetExportSession *exportSession = [[AVAssetExportSession alloc]initWithAsset:avAsset presetName:AVAssetExportPresetHighestQuality];
-        exportSession.outputURL = newUrl;
-        exportSession.outputFileType = AVFileTypeMPEG4;
-        exportSession.shouldOptimizeForNetworkUse = YES;
-        
-        [exportSession exportAsynchronouslyWithCompletionHandler:^{
-            switch ([exportSession status])
-            {
-                case AVAssetExportSessionStatusFailed:
-                    NSLog(@"Export session failed");
-                    break;
-                case AVAssetExportSessionStatusCancelled:
-                    NSLog(@"Export canceled");
-                    break;
-                case AVAssetExportSessionStatusCompleted:
-                {
-                    //Video conversion finished
-                    NSLog(@"Successful!");
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self sendVideoWithUrl:newUrl];
-                    });
-                }
-                    break;
-                default:
-                    break;
-            }
-        }];
-    }
-}
-
-- (void)sendVideoWithUrl:(NSURL*)url
-{
-    if (!NSThread.isMainThread) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self sendVideoWithUrl:url];
-        });
-        return;
-    }
+- (void)sendVideoWithUrl:(NSURL*)url {
     NSData *videoData = [NSData dataWithContentsOfURL:url];
     NSString *videoPath = [NSString stringWithFormat:@"%@%@.mp4", TUIKit_Video_Path, [THelper genVideoName:nil]];
     [[NSFileManager defaultManager] createFileAtPath:videoPath contents:videoData attributes:nil];
@@ -872,22 +702,7 @@
         _multiChooseView.frame = self.view.bounds;
         _multiChooseView.delegate = self;
         _multiChooseView.titleLabel.text = self.conversationData.title;
-        if (@available(iOS 12.0, *)) {
-            if (@available(iOS 13.0, *)) {
-                // > ios 12
-                [UIApplication.sharedApplication.keyWindow addSubview:_multiChooseView];
-            } else {
-                // ios 12
-                UIView *view = self.navigationController.view;
-                if (view == nil) {
-                    view = self.view;
-                }
-                [view addSubview:_multiChooseView];
-            }
-        } else {
-            // < ios 12
-            [UIApplication.sharedApplication.keyWindow addSubview:_multiChooseView];
-        }
+        [UIApplication.sharedApplication.keyWindow addSubview:_multiChooseView];
     } else {
         [self.messageController enableMultiSelectedMode:NO];
     }
@@ -1097,8 +912,6 @@
         for (V2TIMMessage *msg in msgs) {
             V2TIMMessage *forwardMessage = [V2TIMManager.sharedInstance createForwardMessage:msg];
             if (forwardMessage) {
-                forwardMessage.isExcludedFromUnreadCount = [TUIKit sharedInstance].config.isExcludedFromUnreadCount;
-                forwardMessage.isExcludedFromLastMessage = [TUIKit sharedInstance].config.isExcludedFromLastMessage;
                 [forwardMsgs addObject:forwardMessage];
             }
         }
@@ -1140,8 +953,6 @@
             }
             return;
         }
-        mergeMessage.isExcludedFromUnreadCount = [TUIKit sharedInstance].config.isExcludedFromUnreadCount;
-        mergeMessage.isExcludedFromLastMessage = [TUIKit sharedInstance].config.isExcludedFromLastMessage;
         if (callback) {
             callback(YES, @[mergeMessage]);
         }

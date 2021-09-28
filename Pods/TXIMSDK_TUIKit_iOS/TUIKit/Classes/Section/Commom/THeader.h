@@ -310,7 +310,6 @@
 #define TUIKitNotification_TIMRefreshListener_Changed @"TUIKitNotification_TIMRefreshListener_Changed"
 #define TUIKitNotification_TIMMessageListener @"TUIKitNotification_TIMMessageListener"
 #define TUIKitNotification_TIMMessageRevokeListener @"TUIKitNotification_TIMMessageRevokeListener"
-#define TUIKitNotification_TIMMessageModifiedListener @"TUIKitNotificaiton_TIMMessageModifiedListener"
 #define TUIKitNotification_TIMUploadProgressListener @"TUIKitNotification_TIMUploadProgressListener"
 #define TUIKitNotification_TIMUserStatusListener @"TUIKitNotification_TIMUserStatusListener"
 #define TUIKitNotification_TIMConnListener @"TUIKitNotification_TIMConnListener"
@@ -331,7 +330,6 @@
 #define TUIKitNotification_onReceiveJoinApplication @"TUIKitNotification_onReceiveJoinApplication"
 #define TUIKitNotification_onMessageStatusChanged @"TUIKitNotification_onMessageStatusChanged"
 #define TUIKitNotification_onTotalUnreadMessageCountChanged @"TUIKitNotifiction_onTotalUnreadMessageCountChanged"
-#define TUIKitNotification_onGroupInfoChanged @"V2TIMGroupNotify_onGroupInfoChanged"
 
 //path
 #define TUIKit_DB_Path [NSHomeDirectory() stringByAppendingString:@"/Documents/com_tencent_imsdk_data/"]

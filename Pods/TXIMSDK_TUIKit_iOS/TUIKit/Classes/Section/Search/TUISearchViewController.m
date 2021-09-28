@@ -192,22 +192,17 @@ static NSString * const HFId = @"HFId";
         V2TIMConversation *conversation = convInfo[kSearchChatHistoryConverationInfo];
         NSArray *msgs = convInfo[kSearchChatHistoryConversationMsgs];
         if (msgs.count == 1) {
-            // 直接跳转到会话页面 --> 因为涉及到自定义消息的解析，回调给 Demo 层跳转
+            // 直接跳转到会话页面
             TUIConversationCellData *conv = [[TUIConversationCellData alloc] init];
-            conv.title = cellModel.title?:cellModel.titleAttributeString.string;
+            conv.title = cellModel.title;
             conv.userID = conversation.userID;
             conv.groupID = conversation.groupID;
-            for (id<TUIConversationListControllerListener> delegate in TUIKitListenerManager.sharedInstance.convListeners) {
-                if ([delegate respondsToSelector:@selector(searchController:withKey:didSelectType:item:conversationCellData:)]) {
-                    [delegate searchController:self withKey:self.searchBar.searchBar.text didSelectType:TUISearchTypeChatHistory item:msgs.firstObject conversationCellData:conv];
-                }
-            }
-//            TUIChatController *chatVc = [[TUIChatController alloc] init];
-//            [chatVc setConversationData:conv];
-//            chatVc.highlightKeyword = self.searchBar.searchBar.text;
-//            chatVc.locateMessage = msgs.firstObject;
-//            chatVc.title = cellModel.title?:cellModel.titleAttributeString.string;
-//            [self.navigationController pushViewController:chatVc animated:YES];
+            TUIChatController *chatVc = [[TUIChatController alloc] init];
+            [chatVc setConversationData:conv];
+            chatVc.highlightKeyword = self.searchBar.searchBar.text;
+            chatVc.locateMessage = msgs.firstObject;
+            chatVc.title = cellModel.title?:cellModel.titleAttributeString.string;
+            [self.navigationController pushViewController:chatVc animated:YES];
             return;
         }
         
@@ -231,9 +226,9 @@ static NSString * const HFId = @"HFId";
         return;
     }
     
-    // 非聊天记录，跳转到具体的会话 --> 因为涉及到自定义消息的解析，回调给 Demo 层跳转
+    // 非聊天记录，跳转到具体的会话
     TUIConversationCellData *conv = [[TUIConversationCellData alloc] init];
-    conv.title = cellModel.title?:cellModel.titleAttributeString.string;
+    conv.title = cellModel.title;
     // 联系人
     if (module == TUISearchResultModuleContact && [cellModel.context isKindOfClass:V2TIMFriendInfo.class]) {
         V2TIMFriendInfo *friend = cellModel.context;
@@ -244,16 +239,10 @@ static NSString * const HFId = @"HFId";
         V2TIMGroupInfo *group = cellModel.context;
         conv.groupID = group.groupID;
     }
-    for (id<TUIConversationListControllerListener> delegate in TUIKitListenerManager.sharedInstance.convListeners) {
-        if ([delegate respondsToSelector:@selector(searchController:withKey:didSelectType:item:conversationCellData:)]) {
-            TUISearchType type = module == TUISearchResultModuleContact ? TUISearchTypeContact : TUISearchTypeChatHistory;
-            [delegate searchController:self withKey:self.searchBar.searchBar.text didSelectType:type item:cellModel.context conversationCellData:conv];
-        }
-    }
-//    TUIChatController *chatVc = [[TUIChatController alloc] init];
-//    [chatVc setConversationData:conv];
-//    chatVc.title = cellModel.title?:cellModel.titleAttributeString.string;
-//    [self.navigationController pushViewController:chatVc animated:YES];
+    TUIChatController *chatVc = [[TUIChatController alloc] init];
+    [chatVc setConversationData:conv];
+    chatVc.title = cellModel.title?:cellModel.titleAttributeString.string;
+    [self.navigationController pushViewController:chatVc animated:YES];
 }
 
 // 点击查看更多跳转

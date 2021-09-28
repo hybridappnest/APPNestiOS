@@ -24,7 +24,7 @@
 
 - (void) resultOfScan:(NSString *)value {
     NSDictionary *data = @{@"data":@{@"result":value},@"announce":[NSNumber numberWithInteger:self.announce]};
-    if (self.callbackName) {
+    if (self.callbackName && self.callbackName.length > 0) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (self.webController) {
                 WebViewController *controller = (WebViewController*)self.webController;

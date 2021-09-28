@@ -21,7 +21,8 @@
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     [self.window setWindowScene:windowScene];
     self.window.backgroundColor = [UIColor blackColor];
-    RootController *rootController = [[RootController alloc] init];
+    UIViewController *rootController = [Suppot createRootController:@[@"guide",@"guide"] guide:YES];
+//    RootController *rootController = [[RootController alloc] init];
     self.window.rootViewController = rootController;
 //    self.window.rootViewController = [Suppot rootViewController];
     [self.window makeKeyAndVisible];

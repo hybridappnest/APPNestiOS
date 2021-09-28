@@ -83,11 +83,6 @@ typedef void (^TSucc)(void);
 - (void)login:(NSString *)userID userSig:(NSString *)sig succ:(TSucc)succ fail:(TFail)fail;
 
 /**
- *  登出
- */
-- (void)logout:(TSucc)succ fail:(TFail)fail;
-
-/**
  *  收到音视频通话邀请推送
  */
 - (void)onReceiveGroupCallAPNs:(V2TIMSignalingInfo *)signalingInfo;

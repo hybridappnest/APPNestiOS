@@ -25,10 +25,12 @@ UIKIT_EXTERN NSString * _Nonnull const WeChatLoginNotification;
 #import "WebViewController.h"
 #import "BaseNavigationController.h"
 #import "ScanController.h"
+#import "GuideViewController.h"
 
 #pragma mark utils
 #import "Tool.h"
 #import "OSSUpload.h"
+#import "Suppot.h"
 
 #pragma mark networking
 #import "NetworkingStatus.h"
@@ -58,6 +60,7 @@ UIKIT_EXTERN NSString * _Nonnull const WeChatLoginNotification;
 #import <YBImageBrowser/YBIBVideoData.h>
 #import <SDWebImage/SDWebImage.h>
 #import <AliyunOSSiOS/AliyunOSSiOS.h>
+#import <CloudPushSDK/CloudPushSDK.h>
 
 
 #endif /* ANFrameworks_h */

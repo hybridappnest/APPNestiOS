@@ -124,6 +124,10 @@
 		84CC46D12700955E007210CA /* study@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CC46A42700955D007210CA /* study@2x.png */; };
 		84CC46D22700955E007210CA /* tab_map@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CC46A52700955D007210CA /* tab_map@3x.png */; };
 		84CC46D32700955E007210CA /* tab_release_h.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CC46A62700955D007210CA /* tab_release_h.png */; };
+		84CC46D62701AEB1007210CA /* Suppot.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC46D52701AEB1007210CA /* Suppot.m */; };
+		84CC46D92701C48D007210CA /* guide.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CC46D82701C48D007210CA /* guide.png */; };
+		84CC46DC2701C9F2007210CA /* guide@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CC46DA2701C9F2007210CA /* guide@2x.png */; };
+		84CC46DD2701C9F2007210CA /* guide@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CC46DB2701C9F2007210CA /* guide@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -318,6 +322,11 @@
 		84CC46A42700955D007210CA /* study@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "study@2x.png"; sourceTree = "<group>"; };
 		84CC46A52700955D007210CA /* tab_map@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_map@3x.png"; sourceTree = "<group>"; };
 		84CC46A62700955D007210CA /* tab_release_h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab_release_h.png; sourceTree = "<group>"; };
+		84CC46D42701AEB1007210CA /* Suppot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Suppot.h; sourceTree = "<group>"; };
+		84CC46D52701AEB1007210CA /* Suppot.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Suppot.m; sourceTree = "<group>"; };
+		84CC46D82701C48D007210CA /* guide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = guide.png; sourceTree = "<group>"; };
+		84CC46DA2701C9F2007210CA /* guide@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "guide@2x.png"; sourceTree = "<group>"; };
+		84CC46DB2701C9F2007210CA /* guide@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "guide@3x.png"; sourceTree = "<group>"; };
 		E2270C34CC080CAC504B8925 /* libPods-app-nest-ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-app-nest-ios.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E629CB708B659A4CE24FB62D /* libPods-app-nest-iosTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-app-nest-iosTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -392,6 +401,7 @@
 		84CC457F26F03A64007210CA /* app-nest-ios */ = {
 			isa = PBXGroup;
 			children = (
+				84CC46D72701C471007210CA /* images */,
 				84CC466F26FC7FFC007210CA /* app-nest-ios.entitlements */,
 				84CC45B526F03E63007210CA /* ANFrameworks */,
 				84CC458026F03A64007210CA /* AppDelegate.h */,
@@ -515,6 +525,8 @@
 				84CC463A26F34124007210CA /* OSSUpload.m */,
 				84CC45DC26F0856F007210CA /* Tool.h */,
 				84CC45DD26F0856F007210CA /* Tool.m */,
+				84CC46D42701AEB1007210CA /* Suppot.h */,
+				84CC46D52701AEB1007210CA /* Suppot.m */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -733,6 +745,16 @@
 			path = tab;
 			sourceTree = "<group>";
 		};
+		84CC46D72701C471007210CA /* images */ = {
+			isa = PBXGroup;
+			children = (
+				84CC46DA2701C9F2007210CA /* guide@2x.png */,
+				84CC46DB2701C9F2007210CA /* guide@3x.png */,
+				84CC46D82701C48D007210CA /* guide.png */,
+			);
+			path = images;
+			sourceTree = "<group>";
+		};
 		9BE098C8A4DE3D06D815532A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -754,8 +776,8 @@
 				84CC457926F03A64007210CA /* Sources */,
 				84CC457A26F03A64007210CA /* Frameworks */,
 				84CC457B26F03A64007210CA /* Resources */,
-				54ADADBB7EE5BF8A69AE3E73 /* [CP] Embed Pods Frameworks */,
 				42C91A8F21F6D24BDE96743D /* [CP] Copy Pods Resources */,
+				DFCDA3157EE4B85B92D96948 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -793,8 +815,8 @@
 				84CC459F26F03A64007210CA /* Sources */,
 				84CC45A026F03A64007210CA /* Frameworks */,
 				84CC45A126F03A64007210CA /* Resources */,
-				3CABBF3140C2E26D53C6F9B8 /* [CP] Embed Pods Frameworks */,
 				6BBFFCB2DE6C1F780433AFCE /* [CP] Copy Pods Resources */,
+				4D0794CB9AC19CF3A3CA6F3B /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -872,6 +894,7 @@
 				84CC45D626F07C61007210CA /* error_dbx.html in Resources */,
 				84CC46AF2700955D007210CA /* tab_release_h@3x.png in Resources */,
 				84CC466E26FC717C007210CA /* icon_custom_toast_fail@3x.png in Resources */,
+				84CC46D92701C48D007210CA /* guide.png in Resources */,
 				84CC46CF2700955E007210CA /* study@3x.png in Resources */,
 				84CC46D12700955E007210CA /* study@2x.png in Resources */,
 				84CC46C02700955E007210CA /* tab_release@2x.png in Resources */,
@@ -892,6 +915,7 @@
 				84CC46C52700955E007210CA /* tab_work@2x.png in Resources */,
 				84CC467626FC86D9007210CA /* back.png in Resources */,
 				84CC46CA2700955E007210CA /* tab_home@3x.png in Resources */,
+				84CC46DC2701C9F2007210CA /* guide@2x.png in Resources */,
 				84CC466226FC7148007210CA /* bg_custom_toast@2x.png in Resources */,
 				84CC46BE2700955D007210CA /* tab_home.png in Resources */,
 				84CC46CE2700955E007210CA /* tab_map@2x.png in Resources */,
@@ -909,6 +933,7 @@
 				84CC46C62700955E007210CA /* tab_home@2x.png in Resources */,
 				84CC46BC2700955D007210CA /* tab_user.png in Resources */,
 				84CC46BA2700955D007210CA /* tab_map.png in Resources */,
+				84CC46DD2701C9F2007210CA /* guide@3x.png in Resources */,
 				84CC46C12700955E007210CA /* tab_danger_h@3x.png in Resources */,
 				84CC46C72700955E007210CA /* study_h@2x.png in Resources */,
 				84CC458B26F03A64007210CA /* Main.storyboard in Resources */,
@@ -936,23 +961,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3CABBF3140C2E26D53C6F9B8 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-app-nest-ios-app-nest-iosUITests/Pods-app-nest-ios-app-nest-iosUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-app-nest-ios-app-nest-iosUITests/Pods-app-nest-ios-app-nest-iosUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-app-nest-ios-app-nest-iosUITests/Pods-app-nest-ios-app-nest-iosUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		42C91A8F21F6D24BDE96743D /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -970,21 +978,21 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-app-nest-ios/Pods-app-nest-ios-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		54ADADBB7EE5BF8A69AE3E73 /* [CP] Embed Pods Frameworks */ = {
+		4D0794CB9AC19CF3A3CA6F3B /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-app-nest-ios/Pods-app-nest-ios-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-app-nest-ios-app-nest-iosUITests/Pods-app-nest-ios-app-nest-iosUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-app-nest-ios/Pods-app-nest-ios-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-app-nest-ios-app-nest-iosUITests/Pods-app-nest-ios-app-nest-iosUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-app-nest-ios/Pods-app-nest-ios-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-app-nest-ios-app-nest-iosUITests/Pods-app-nest-ios-app-nest-iosUITests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6BBFFCB2DE6C1F780433AFCE /* [CP] Copy Pods Resources */ = {
@@ -1048,6 +1056,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		DFCDA3157EE4B85B92D96948 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-app-nest-ios/Pods-app-nest-ios-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-app-nest-ios/Pods-app-nest-ios-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-app-nest-ios/Pods-app-nest-ios-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		EB25ED20C395EDA7631D5689 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1091,6 +1116,7 @@
 				84CC460226F1CEAD007210CA /* UIApplication+Category.m in Sources */,
 				84CC463B26F34124007210CA /* OSSUpload.m in Sources */,
 				84CC45F326F09F06007210CA /* NSObject+Category.m in Sources */,
+				84CC46D62701AEB1007210CA /* Suppot.m in Sources */,
 				84CC464E26FB5E4D007210CA /* OneKeyLoginService.m in Sources */,
 				84CC461226F1F775007210CA /* DBXImagePicker.m in Sources */,
 				84CC462026F31E5B007210CA /* OptionMenuService.m in Sources */,

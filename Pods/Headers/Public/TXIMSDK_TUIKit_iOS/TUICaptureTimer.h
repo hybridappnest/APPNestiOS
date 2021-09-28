@@ -1,1 +1,0 @@
-../../../TXIMSDK_TUIKit_iOS/TUIKit/Classes/Util/Camera/View/TUICaptureTimer.h

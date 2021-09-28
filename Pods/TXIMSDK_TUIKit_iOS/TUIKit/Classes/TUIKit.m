@@ -137,39 +137,6 @@
     }];
 }
 
-- (void)logout:(TSucc)succ fail:(TFail)fail {
-    // 退出
-    [[V2TIMManager sharedInstance] logout:^{
-        
-        Class liveClass = NSClassFromString(@"TUIKitLive");
-        if (liveClass) {
-            /// TUIKitLive obeject
-            SEL shareSel = NSSelectorFromString(@"shareInstance");
-            NSMethodSignature *shareMethod = [liveClass methodSignatureForSelector:shareSel];
-            NSInvocation *shareInvocation = [NSInvocation invocationWithMethodSignature:shareMethod];
-            shareInvocation.target = liveClass;
-            shareInvocation.selector = shareSel;
-            [shareInvocation invoke];
-            __autoreleasing NSObject *tuikitObj = nil;
-            [shareInvocation getReturnValue:&tuikitObj];
-            if (tuikitObj && [NSStringFromClass(tuikitObj.class) isEqualToString:@"TUIKitLive"]) {
-                /// 调用[[TUIKitLive shareInstance] logout:nil]
-
-                SEL loginSel = NSSelectorFromString(@"logout:");
-                NSMethodSignature *logoutMethodSig = [liveClass instanceMethodSignatureForSelector:loginSel];
-                NSInvocation *logoutInvocation = [NSInvocation invocationWithMethodSignature:logoutMethodSig];
-                logoutInvocation.target = tuikitObj;
-                logoutInvocation.selector = loginSel;
-                [logoutInvocation invoke];
-            }
-        }
-        
-        succ();
-        
-        NSLog(@"登出成功！");
-    } fail:fail];
-}
-
 - (void)onReceiveGroupCallAPNs:(V2TIMSignalingInfo *)signalingInfo {
     Class callClass = NSClassFromString(@"TUIKitLive");
     if (callClass) {
@@ -290,10 +257,6 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_TIMMessageRevokeListener object:msgID];
 }
 
-- (void)onRecvMessageModified:(V2TIMMessage *)msg {
-    [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_TIMMessageModifiedListener object:msg];
-}
-
 #pragma mark V2TIMGroupListener
 /// 群消息因为只能添加一个setGroupListener，所以需要通知给TUIKit_Live
 - (void)notify:(NSString *)notifyName buildInfo:(void (^)(void(^safeAddKeyValue)(id key, id value)))infoBuilder {
@@ -368,7 +331,7 @@
 
 - (void)onGroupInfoChanged:(NSString *)groupID changeInfoList:(NSArray <V2TIMGroupChangeInfo *> *)changeInfoList {
     // onGroupInfoChanged
-    [self notify:TUIKitNotification_onGroupInfoChanged buildInfo:^(void (^safeAddKeyValue)(id key, id value)) {
+    [self notify:@"V2TIMGroupNotify_onGroupInfoChanged" buildInfo:^(void (^safeAddKeyValue)(id key, id value)) {
         safeAddKeyValue(@"groupID", groupID);
         safeAddKeyValue(@"changeInfoList", changeInfoList);
     }];

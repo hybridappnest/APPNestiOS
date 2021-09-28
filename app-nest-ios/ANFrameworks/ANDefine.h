@@ -56,6 +56,9 @@
 #define wxscope (@"")
 #define wxstate (@"")
 
+#define alipushKey (@"")
+#define alipushSecret (@"")
+
 
 
 #endif /* ANDefine_h */

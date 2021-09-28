@@ -17,6 +17,8 @@ cocospod使用，请参阅：https://guides.cocoapods.org
 * 支持手机号一键登陆
 * 支持微信登陆（只支持Universal Link唤起app，不再支持scheme的方式唤起app，如果需要可以自行按照苹果官方配置）
 * 支持自定义JS事件
+* 支持启动引导页配置
+* 支持阿里云push通知
 
 # 目录结构
 ```
@@ -51,6 +53,7 @@ cocospod使用，请参阅：https://guides.cocoapods.org
       pod 'YBImageBrowser/VideoNOSD'
       pod 'AliyunOSSiOS'
       pod 'WechatOpenSDK'
+      pod 'AlicloudPush'
       pod 'TXIMSDK_TUIKit_iOS' //腾讯云IMSDK，需要注掉Podfile中的use_frameworks
 腾讯云IM使用，请参阅：https://cloud.tencent.com/document/product/269/37060
 
@@ -113,6 +116,7 @@ self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 self.window.backgroundColor = [UIColor blackColor];
 [self.window makeKeyAndVisible]; 
 RootController *rootController = [[RootController alloc] init];
+//UIViewController *rootController = [Suppot createRootController:@[] guide:NO]; //如果需要启动引导页，调用该方法实例化rootController
 self.window.rootViewController = rootController;
 return YES;
 ```
@@ -127,6 +131,7 @@ if (@available(iOS 13.0,*)) {
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
     RootController *rootController = [[RootController alloc] init];
+    //UIViewController *rootController = [Suppot createRootController:@[] guide:NO]; //如果需要启动引导页，调用该方法实例化rootController
     self.window.rootViewController = rootController;
     return YES;
 }
@@ -138,9 +143,18 @@ self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 [self.window setWindowScene:windowScene];
 self.window.backgroundColor = [UIColor blackColor];
 RootController *rootController = [[RootController alloc] init];
+//UIViewController *rootController = [Suppot createRootController:@[] guide:NO]; //如果需要启动引导页，调用该方法实例化rootController
 self.window.rootViewController = rootController;    
 [self.window makeKeyAndVisible];
 ```
+#### （7）阿里云推送配置
+ANDefine.h （敏感的配置信息，建议配置在ANDefine.h中）
+```
+alipushKey //阿里云推送的appKey （必填）
+alipushSecret //阿里云推送的密钥 （必填）
+
+```
+不配置该信息，则初始化阿里云推送
 
 ## 二，web页功能使用
 ### （1）打开web页面

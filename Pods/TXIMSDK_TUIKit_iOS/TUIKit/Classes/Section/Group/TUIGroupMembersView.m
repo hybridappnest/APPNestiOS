@@ -48,13 +48,8 @@
     _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.showsVerticalScrollIndicator = NO;
     _collectionView.backgroundColor = [UIColor clearColor];
-    _collectionView.contentInset = UIEdgeInsetsMake(0, 0, TMessageController_Header_Height, 0);
     [self addSubview:_collectionView];
-    
-    _indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    _indicatorView.hidesWhenStopped = YES;
-    [self.collectionView addSubview:_indicatorView];
-    
+
     _flowLayout.minimumLineSpacing = (_collectionView.frame.size.width - cellSize.width * TGroupMembersController_Row_Count) / (TGroupMembersController_Row_Count - 1);;
     _flowLayout.minimumInteritemSpacing = _flowLayout.minimumLineSpacing;
 }
@@ -82,14 +77,6 @@
     return [TUIGroupMemberCell getSize];
 }
 
-#pragma mark - 下拉加载
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    if(scrollView.contentOffset.y > 0 && (scrollView.contentOffset.y >= scrollView.bounds.origin.y)){
-        [self loadMoreData];
-    }
-}
-
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
 {
     searchBar.showsCancelButton = YES;
@@ -108,51 +95,12 @@
 {
     searchBar.showsCancelButton = NO;
     [searchBar resignFirstResponder];
-    [self reloadData];
+    [_collectionView reloadData];
 }
 
 - (void)setData:(NSMutableArray *)data
 {
     _data = data;
-    [self reloadData];
+    [_collectionView reloadData];
 }
-
-- (void)reloadData
-{
-    [self.collectionView reloadData];
-    [self.collectionView layoutIfNeeded];
-    self.indicatorView.frame = CGRectMake(0, self.collectionView.contentSize.height, self.collectionView.bounds.size.width, TMessageController_Header_Height);
-    if (self.collectionView.contentSize.height > self.collectionView.frame.size.height) {
-        [self.indicatorView startAnimating];
-    } else {
-        [self.indicatorView stopAnimating];
-    }
-}
-
-- (void)loadMoreData
-{
-    if (![self.delegate respondsToSelector:@selector(groupMembersView:didLoadMoreData:)]) {
-        CGPoint point = self.collectionView.contentOffset;
-        point.y -= TMessageController_Header_Height;
-        [self.collectionView setContentOffset:point animated:YES];
-        return;
-    }
-    
-    static BOOL isLoading = NO;
-    if (isLoading) {
-        return;
-    }
-    isLoading = YES;
-    __weak typeof(self) weakSelf = self;
-    [self.delegate groupMembersView:self didLoadMoreData:^(NSArray<TGroupMemberCellData *> *moreData) {
-        isLoading = NO;
-        [weakSelf.data addObjectsFromArray:moreData];
-        CGPoint point = self.collectionView.contentOffset;
-        point.y -= TMessageController_Header_Height;
-        [weakSelf.collectionView setContentOffset:point animated:YES];
-        [weakSelf reloadData];
-    }];
-}
-
-
 @end

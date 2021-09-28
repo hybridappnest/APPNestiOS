@@ -208,7 +208,7 @@ NSString *const toDetailHistory = @"toDetailHistory";
 //    urlStr = [urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSLog(@"urlStr = %@",urlStr);
    NSURL *url = [NSURL URLWithString:urlStr];
-   NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];//NSURLRequestReloadIgnoringLocalAndRemoteCacheData
+   NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];//NSURLRequestReloadIgnoringLocalAndRemoteCacheData
    [_webView loadRequest:request];
     _webView.backgroundColor = [UIColor clearColor];
 }

@@ -31,6 +31,7 @@
 #import "TUIUserProfileControllerServiceProtocol.h"
 #import "UIColor+TUIDarkMode.h"
 #import "NSBundle+TUIKIT.h"
+#import "TUIMessageMultiChooseView.h"
 #import "TUIMergeMessageListController.h"
 
 
@@ -102,12 +103,12 @@
 - (void)limitReadReport {
     static uint64_t lastTs = 0;
     uint64_t curTs = [[NSDate date] timeIntervalSince1970];
-    // 超过 1s && 非首次 立即上报已读
-    if (curTs - lastTs >= 1 && lastTs) {
+    // 超过 1s 立即上报已读
+    if (curTs - lastTs >= 1) {
         lastTs = curTs;
         [self readedReport];
     } else {
-        // 低于 1s || 首次  延迟 1s 合并上报
+        // 低于 1s 延迟 1s 合并上报
         static BOOL delayReport = NO;
         if (delayReport) {
             return;
@@ -140,7 +141,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onNewMessage:) name:TUIKitNotification_TIMMessageListener object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onRevokeMessage:) name:TUIKitNotification_TIMMessageRevokeListener object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRecvMessageReceipts:) name:TUIKitNotification_onRecvMessageReceipts object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRecvMessageModified:) name:TUIKitNotification_TIMMessageModifiedListener object:nil];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapViewController)];
     [self.view addGestureRecognizer:tap];
     
@@ -292,48 +292,6 @@
     }
 }
 
-- (void)didRecvMessageModified:(NSNotification *)notification
-{
-    V2TIMMessage *imMsg = notification.object;
-    if (imMsg == nil || ![imMsg isKindOfClass:V2TIMMessage.class]) {
-        return;
-    }
-    
-    TUIMessageCellData *msg = nil;
-    for (msg in _uiMsgs) {
-        if ([msg.msgID isEqualToString:imMsg.msgID]) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self revokeMsg:msg];
-            });
-            break;
-        }
-    }
-    if (msg == nil) {
-        return;
-    }
-    
-    NSInteger index = [_uiMsgs indexOfObject:msg];
-    if (index == NSNotFound) {
-        return;
-    }
-    
-    // 取 lastObject, 过滤掉内部生成的 dateMsg
-    TUIMessageCellData *replacedCellData = [self transUIMsgFromIMMsg:@[imMsg]].lastObject;
-    if (replacedCellData == nil) {
-        return;
-    }
-    
-    [_uiMsgs removeObject:msg];
-    if (index < self.heightCache.count) {
-        [self.heightCache replaceObjectAtIndex:index withObject:@(0)];
-    }
-    [self.tableView beginUpdates];
-    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
-    [_uiMsgs insertObject:replacedCellData atIndex:index];
-    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
-    [self.tableView endUpdates];
-}
-
 - (NSMutableArray *)transUIMsgFromIMMsg:(NSArray *)msgs
 {
     NSMutableArray *uiMsgs = [NSMutableArray array];
@@ -369,8 +327,6 @@
                 data.name = data.identifier;
                 if (msg.nameCard.length > 0) {
                     data.name = msg.nameCard;
-                } else if (msg.friendRemark.length > 0) {
-                    data.name = msg.friendRemark;
                 } else if (msg.nickName.length > 0){
                     data.name = msg.nickName;
                 }
@@ -414,8 +370,6 @@
             data.name = data.identifier;
             if (msg.nameCard.length > 0) {
                 data.name = msg.nameCard;
-            } else if (msg.friendRemark.length > 0) {
-                data.name = msg.friendRemark;
             } else if (msg.nickName.length > 0){
                 data.name = msg.nickName;
             }
@@ -570,37 +524,34 @@
         return;
     }
     @weakify(self)
-
-    imMsg.isExcludedFromUnreadCount = [TUIKit sharedInstance].config.isExcludedFromUnreadCount;
+    // 会议群不支持设置该参数
+    if (![_conversationData.groupType isEqualToString:GroupType_Meeting]) {
+        imMsg.isExcludedFromUnreadCount = [TUIKit sharedInstance].config.isExcludedFromUnreadCount;
+    }
     imMsg.isExcludedFromLastMessage = [TUIKit sharedInstance].config.isExcludedFromLastMessage;
     
     // 设置离线推送
     V2TIMOfflinePushInfo *pushInfo = [[V2TIMOfflinePushInfo alloc] init];
-    BOOL isGroup = self.conversationData.groupID.length > 0;
-    NSString *senderId = isGroup ? (self.conversationData.groupID) : (TUIKit.sharedInstance.userID);
-    senderId = senderId?:@"";
-    NSString *nickName = isGroup ? (self.conversationData.title) : (TUIKit.sharedInstance.nickName?:TUIKit.sharedInstance.userID);
-    nickName = nickName ?: @"";
     NSDictionary *ext = @{
         @"entity": @{
                 @"action": @1,
-                @"content": imMsg.getDisplayString?:@"",
-                @"sender": senderId,
-                @"nickname": nickName,
+                @"content": imMsg.getDisplayString,
+                @"sender": TUIKit.sharedInstance.userID,
+                @"nickname": TUIKit.sharedInstance.nickName?:TUIKit.sharedInstance.userID,
                 @"faceUrl": TUIKit.sharedInstance.faceUrl?:@"",
-                @"chatType": isGroup?@(V2TIM_GROUP):@(V2TIM_C2C)
+                @"chatType": self.conversationData.groupID.length?@(V2TIM_GROUP):@(V2TIM_C2C)
         }
     };
     NSData *data = [NSJSONSerialization dataWithJSONObject:ext options:NSJSONWritingPrettyPrinted error:nil];
     pushInfo.ext = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     pushInfo.AndroidOPPOChannelID = @"tuikit";
-    NSString *msgID = [[V2TIMManager sharedInstance] sendMessage:imMsg
-                                                        receiver:self.conversationData.userID
-                                                         groupID:self.conversationData.groupID
-                                                        priority:V2TIM_PRIORITY_NORMAL
-                                                  onlineUserOnly:NO
-                                                 offlinePushInfo:pushInfo
-                                                        progress:^(uint32_t progress) {
+    [[V2TIMManager sharedInstance] sendMessage:imMsg
+                                      receiver:self.conversationData.userID
+                                       groupID:self.conversationData.groupID
+                                      priority:V2TIM_PRIORITY_NORMAL
+                                onlineUserOnly:NO
+                               offlinePushInfo:pushInfo
+                                      progress:^(uint32_t progress) {
         @strongify(self)
         for (TUIMessageCellData *uiMsg in self.uiMsgs) {
             if ([uiMsg.innerMessage.msgID isEqualToString:imMsg.msgID]) {
@@ -635,7 +586,6 @@
     msg.status = Msg_Status_Sending;
     msg.name = [msg.innerMessage getShowName];
     msg.avatarUrl = [NSURL URLWithString:[msg.innerMessage faceURL]];
-    msg.msgID = msgID;
     if(dateMsg){
         _msgForDate = imMsg;
         [_uiMsgs addObject:dateMsg];

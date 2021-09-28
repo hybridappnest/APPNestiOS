@@ -26,7 +26,7 @@
         if (data && [data isKindOfClass:[NSArray class]]) {
             [self uploadDatas:data block:^(NSArray *urls, NSError *error) {
                 if (urls) {
-                    if (weakself && weakself.callbackName) {
+                    if (weakself && weakself.callbackName && weakself.callbackName.length > 0) {
                         [weakself callback:urls];
                     }
                 }

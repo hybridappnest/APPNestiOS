@@ -20,11 +20,11 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-    <key>LSApplicationQueriesSchemes</key>
-    <array>
-        <string>weixin</string>
-        <string>weixinULAPI</string>
-    </array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>weixin</string>
+		<string>weixinULAPI</string>
+	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>客户端需要您的同意访问相机，若不允许，您将无法使用录像功能</string>
 	<key>NSMicrophoneUsageDescription</key>

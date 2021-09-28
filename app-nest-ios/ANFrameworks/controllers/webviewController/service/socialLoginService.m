@@ -50,6 +50,10 @@
     __weak socialLoginService *weakself = self;
     NSString *token = [dic valueForKey:@"token"];
     NSDictionary *data = @{@"data":@{@"channel":@"phone",@"status":@2,@"token":token},@"announce":[NSNumber numberWithInteger:self.announce]};
+    if (!(self.callbackName && self.callbackName.length > 0)) {
+        NSLog(@"没有定义回调事件");
+        return;
+    }
     dispatch_async(dispatch_get_main_queue(), ^{
         if (weakself && weakself.webController) {
             WebViewController *controller = (WebViewController*)weakself.webController;
@@ -63,6 +67,10 @@
 - (void) wecharCallback:(NSString *)code {
     __weak socialLoginService *weakself = self;
     NSDictionary *data = @{@"data":@{@"channel":@"wechat",@"status":@2,@"token":code},@"announce":[NSNumber numberWithInteger:self.announce]};
+    if (!(self.callbackName && self.callbackName.length > 0)) {
+        NSLog(@"没有定义回调事件");
+        return;
+    }
     dispatch_async(dispatch_get_main_queue(), ^{
         if (weakself && weakself.webController) {
             WebViewController *controller = (WebViewController*)weakself.webController;
