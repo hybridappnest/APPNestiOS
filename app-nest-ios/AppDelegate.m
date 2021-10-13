@@ -22,14 +22,14 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    [JSService initDefaultJSService];
-    NSString *aliAppKey = alipushKey;
+    [JSService initDefaultJSService];//初始化预置JS时间
+    NSString *aliAppKey = alipushKey;//配置阿里云推送参数
     NSString *aliSecret = alipushSecret;
     if (aliAppKey.length > 0 && aliSecret.length > 0) {
         [CloudPushSDK asyncInit:alipushKey appSecret:alipushSecret callback:nil];
         [Suppot registNotification:self];
     }
-
+    [DBXImagePicker configUI:@{@"buttonBack":@"e5e5e5",@"buttonColor":@"333333",@"buttonFont":@14,@"splitColor":@"e5e5e5",@"buttonHeight":@56}];//配置图片选择器弹出菜单样式
     if (@available(iOS 13.0,*)) {
         return YES;
     } else {

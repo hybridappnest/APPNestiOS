@@ -8,11 +8,23 @@
 #import "DBXImagePickerController.h"
 #import "ANFrameworks.h"
 
+static NSDictionary *uiConfig;
+
 
 @implementation DBXImagePicker{
     void (^saveMedia) (NSArray *medias,NSArray *urls,NSArray *images);
 }
 
++ (void) configUI:(NSDictionary*) dic {
+    uiConfig = dic;
+    if (!uiConfig) {
+        uiConfig = @{@"buttonBack":@"e5e5e5",@"buttonColor":@"333333",@"buttonFont":@14,@"splitColor":@"e5e5e5",@"buttonHeight":@56};
+    }
+}
+
++ (NSDictionary*) uiConfigDic {
+    return  uiConfig;
+}
 
 - (instancetype) initWithData:(NSDictionary*) data withCompletion:(void (^) (NSArray *medias,NSArray *urls,NSArray *images)) callback {
     self = [super init];
@@ -89,10 +101,19 @@
     if (_isOnlyTakePhone) {
         array = @[@"拍照"];
     }
-    CGFloat height = 56;
+    //@{@"buttonBack":@"e5e5e5",@"buttonColor":@"333333",@"buttonFont":@14,@"splitColor":@"e5e5e5",@"buttonHeight":@56};
+    NSDictionary *dic = [DBXImagePicker uiConfigDic];
+    CGFloat height = [[dic valueForKey:@"buttonHeight"] floatValue];
+    if (height <= 0) {
+        height = 56;
+    }
     CGFloat allHeight = height * array.count + height + 10;
     UIView *buttonBack = [[UIView alloc] initWithFrame:CGRectMake(0, secondView.frame.size.height - allHeight, secondView.frame.size.width, allHeight)];
-    buttonBack.backgroundColor = [UIColor colorFromHexString:@"e5e5e5"];
+    NSString *buttonBackColor = [NSString convertNull:[dic valueForKey:@"buttonBack"]];
+    if (!(buttonBackColor && buttonBackColor.length > 0)) {
+        buttonBackColor = @"e5e5e5";
+    }
+    buttonBack.backgroundColor = [UIColor colorFromHexString:buttonBackColor];
     [buttonBack topCorner:10];
     [secondView addSubview:buttonBack];
     
@@ -113,14 +134,26 @@
 //        }
         button.frame = CGRectMake(0, i * height, buttonBack.frame.size.width, height);
         [button setTitle:string forState:UIControlStateNormal];
-        [button setTitleColor:[UIColor colorFromHexString:@"333333"] forState:UIControlStateNormal];
-        button.titleLabel.font = [UIFont systemFontOfSize:14];
+        NSString *buttonColor = [NSString convertNull:[dic valueForKey:@"buttonColor"]];
+        if (!(buttonColor && buttonColor.length > 0)) {
+            buttonColor = @"333333";
+        }
+        [button setTitleColor:[UIColor colorFromHexString:buttonColor] forState:UIControlStateNormal];
+        CGFloat buttonFont = [[dic valueForKey:@"buttonFont"] floatValue];
+        if (buttonFont <= 0) {
+            buttonFont = 14;
+        }
+        button.titleLabel.font = [UIFont systemFontOfSize:buttonFont];
         [button addTarget:self action:@selector(dealButton:) forControlEvents:UIControlEventTouchUpInside];
         [buttonBack addSubview:button];
         
         if (i < array.count - 1) {
             UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, button.frame.size.height - 0.5, button.frame.size.width, 0.5)];
-            line.backgroundColor = [UIColor colorFromHexString:@"e5e5e5"];
+            NSString *splitColor = [NSString convertNull:[dic valueForKey:@"splitColor"]];
+            if (!(splitColor && splitColor.length > 0)) {
+                splitColor = @"e5e5e5";
+            }
+            line.backgroundColor = [UIColor colorFromHexString:splitColor];
             [button addSubview:line];
         }
     }
@@ -129,8 +162,16 @@
     cancelButton.frame = CGRectMake(0,buttonBack.frame.size.height - height, buttonBack.frame.size.width, height);
     cancelButton.backgroundColor = [UIColor whiteColor];
     [cancelButton setTitle:@"取消" forState:UIControlStateNormal];
-    [cancelButton setTitleColor:[UIColor colorFromHexString:@"333333"] forState:UIControlStateNormal];
-    cancelButton.titleLabel.font = [UIFont systemFontOfSize:14];
+    NSString *buttonColor = [NSString convertNull:[dic valueForKey:@"buttonColor"]];
+    if (!(buttonColor && buttonColor.length > 0)) {
+        buttonColor = @"333333";
+    }
+    [cancelButton setTitleColor:[UIColor colorFromHexString:buttonColor] forState:UIControlStateNormal];
+    CGFloat buttonFont = [[dic valueForKey:@"buttonFont"] floatValue];
+    if (buttonFont <= 0) {
+        buttonFont = 14;
+    }
+    cancelButton.titleLabel.font = [UIFont systemFontOfSize:buttonFont];
     [cancelButton addTarget:self action:@selector(dealCancel) forControlEvents:UIControlEventTouchUpInside];
     [buttonBack addSubview:cancelButton];
 

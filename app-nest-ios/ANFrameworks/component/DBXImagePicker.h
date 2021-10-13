@@ -41,6 +41,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,assign) BOOL needWatermark;
 
++ (void) configUI:(NSDictionary*) dic;
+
++ (NSDictionary*) uiConfigDic;
+
 - (instancetype) initWithData:(NSDictionary*) data withCompletion:(void (^) (NSArray *medias,NSArray *urls,NSArray *images)) callback;
 
 - (void) showImagePicker;

@@ -10,6 +10,7 @@
 		112FC35C0B38A7556BB42289 /* libPods-app-nest-iosTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E629CB708B659A4CE24FB62D /* libPods-app-nest-iosTests.a */; };
 		121BB824C5D0EACCFA1091DD /* libPods-app-nest-ios-app-nest-iosUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D0EB6DF4EA0EB9E9D01A69 /* libPods-app-nest-ios-app-nest-iosUITests.a */; };
 		2491FC1B46AB99D144503EDB /* libPods-app-nest-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E2270C34CC080CAC504B8925 /* libPods-app-nest-ios.a */; };
+		84B9935827046A3700D2B914 /* DBXToast+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B9935727046A3700D2B914 /* DBXToast+Category.m */; };
 		84CC458226F03A64007210CA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC458126F03A64007210CA /* AppDelegate.m */; };
 		84CC458526F03A64007210CA /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC458426F03A64007210CA /* SceneDelegate.m */; };
 		84CC458826F03A64007210CA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC458726F03A64007210CA /* ViewController.m */; };
@@ -155,6 +156,8 @@
 		4ED519787D127BB7E02EF5D9 /* Pods-app-nest-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-app-nest-ios.release.xcconfig"; path = "Target Support Files/Pods-app-nest-ios/Pods-app-nest-ios.release.xcconfig"; sourceTree = "<group>"; };
 		83002597A86B9E8999B01AF4 /* Pods-app-nest-ios-app-nest-iosUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-app-nest-ios-app-nest-iosUITests.release.xcconfig"; path = "Target Support Files/Pods-app-nest-ios-app-nest-iosUITests/Pods-app-nest-ios-app-nest-iosUITests.release.xcconfig"; sourceTree = "<group>"; };
 		83593DAD8315111A85035B2F /* Pods-app-nest-iosTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-app-nest-iosTests.release.xcconfig"; path = "Target Support Files/Pods-app-nest-iosTests/Pods-app-nest-iosTests.release.xcconfig"; sourceTree = "<group>"; };
+		84B9935627046A3700D2B914 /* DBXToast+Category.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DBXToast+Category.h"; sourceTree = "<group>"; };
+		84B9935727046A3700D2B914 /* DBXToast+Category.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "DBXToast+Category.m"; sourceTree = "<group>"; };
 		84CC457D26F03A64007210CA /* app-nest-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "app-nest-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84CC458026F03A64007210CA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		84CC458126F03A64007210CA /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -415,6 +418,8 @@
 				84CC458E26F03A64007210CA /* LaunchScreen.storyboard */,
 				84CC459126F03A64007210CA /* Info.plist */,
 				84CC459226F03A64007210CA /* main.m */,
+				84B9935627046A3700D2B914 /* DBXToast+Category.h */,
+				84B9935727046A3700D2B914 /* DBXToast+Category.m */,
 			);
 			path = "app-nest-ios";
 			sourceTree = "<group>";
@@ -1144,6 +1149,7 @@
 				84CC45D426F07C61007210CA /* CloseWebController.m in Sources */,
 				84CC458526F03A64007210CA /* SceneDelegate.m in Sources */,
 				84CC45D326F07C61007210CA /* RootController.m in Sources */,
+				84B9935827046A3700D2B914 /* DBXToast+Category.m in Sources */,
 				84CC45E126F0984F007210CA /* UIColor+Category.m in Sources */,
 				84CC462326F31F5E007210CA /* PushWindowService.m in Sources */,
 				84CC45FC26F1C6AF007210CA /* UIImage+Category.m in Sources */,

@@ -46,7 +46,7 @@ cocospod使用，请参阅：https://guides.cocoapods.org
 ### 1，从github下载ANFrameworks，
     （1）导入到自己的工程中，在AppDelegate中引用#import "ANFrameworks.h"头文件，并在didFinishLaunchingWithOptions中调用[JSService initDefaultJSService];初始化预置JS事件
 
-    （2），通过cocospod，导入三房库
+    （2），通过cocospod，导入三方库
       pod 'AFNetworking', '~> 4.0.1'
       pod 'JSONModel'
       pod 'YBImageBrowser/NOSD'
@@ -54,7 +54,7 @@ cocospod使用，请参阅：https://guides.cocoapods.org
       pod 'AliyunOSSiOS'
       pod 'WechatOpenSDK'
       pod 'AlicloudPush'
-      pod 'TXIMSDK_TUIKit_iOS' //腾讯云IMSDK，需要注掉Podfile中的use_frameworks
+      pod 'TXIMSDK_TUIKit_iOS' //腾讯云IMSDK，需要注掉Podfile中的use_frameworks，请参与腾讯云IM使用
 腾讯云IM使用，请参阅：https://cloud.tencent.com/document/product/269/37060
 
 ### 2，配置config.plist（详见demo中配置）
@@ -155,6 +155,22 @@ alipushSecret //阿里云推送的密钥 （必填）
 
 ```
 不配置该信息，则初始化阿里云推送
+
+#### (8) 自定义控件配置
+
+##### 图片选择器UI配置
+在AppDelegate中的didFinishLaunchingWithOptions调用：
+```
+[DBXImagePicker configUI:@{@"buttonBack":@"e5e5e5",@"buttonColor":@"333333",@"buttonFont":@14,@"splitColor":@"e5e5e5",@"buttonHeight":@56}];//配置图片选择器弹出菜单样式
+buttonBack //按钮背景颜色
+buttonColor //按钮字体颜色
+buttonFont //按钮字体大小
+splitColor //按钮间分割线颜色
+buttonHeight //按钮高度
+
+```
+##### Toast提示自定义
+实现一个DBXToast的分类，并实现showToast:success:方法，内部实现自己的UI即可
 
 ## 二，web页功能使用
 ### （1）打开web页面
